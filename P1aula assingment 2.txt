@@ -1,24 +1,33 @@
+ library(MASS)
+makeCacheMatrix <- function(x = matrix()) {
+  inv <- NULL
+  row <- function(y) {
+    x <<- y
+    inv <<- NULL
+  }
+  get <- function() x      #function to get matrix x
+    rowinv <- function(mean) inv <<- mean
+  getinv <- function() {
+        inver <- ginv(x)
+        inver%*%x             #function to get the inverse of the matrix
+  }
+  list(row = row, get = get,
+       rowinv = rowinv,
+       getinv = getinv)
+}
 
-R version 3.2.1 (2015-06-18) -- "World-Famous Astronaut"
-Copyright (C) 2015 The R Foundation for Statistical Computing
-Platform: x86_64-apple-darwin10.8.0 (64-bit)
 
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-[R.app GUI 1.66 (6956) x86_64-apple-darwin10.8.0]
-
-[History restored from /Users/sabrinapaula/.Rapp.history]
-
-> 
+## Write a short comment describing this function
+## This is used to solve for th cache data
+cachesolve <- function(x, ...)    ##gets cache data
+  {
+  inv <- x$getinv()
+  if(!is.null(inv)) {
+    message("getting cached data")
+    return(inv)
+  }
+  data <- x$get()
+  inv <- solve(data, ...)          #calculates the inverse value
+  x$rowinv(inv)
+  inv
+}
